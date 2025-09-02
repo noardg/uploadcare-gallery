@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Discover Gallery</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin: 20px; }
+    .gallery img { width: 100%; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
+  <h1>Discover</h1>
+  <div id="gallery" class="gallery"></div>
+
+  <script>
+    const publicKey = "20c6bb209f05abd9946e"; // 🔹 replace with your Uploadcare public key
+    const galleryDiv = document.getElementById("gallery");
+
+    async function loadGallery() {
+      let response = await fetch(`https://api.uploadcare.com/files/`, {
+        headers: { "Authorization": "Uploadcare.Simple " + publicKey + ":" }
+      });
+
+      let data = await response.json();
+      console.log(data);
+
+      data.results.forEach(file => {
+        if (file.is_image) {
+          let img = document.createElement("img");
+          img.src = file.original_file_url;
+          galleryDiv.appendChild(img);
+        }
+      });
+    }
+
+    loadGallery();
+  </script>
+</body>
+</html>
